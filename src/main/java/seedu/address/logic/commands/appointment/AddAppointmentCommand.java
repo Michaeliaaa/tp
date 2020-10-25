@@ -8,6 +8,7 @@ import java.util.List;
 
 import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
@@ -17,7 +18,7 @@ import seedu.address.model.patient.IcNumber;
 import seedu.address.model.patient.Name;
 import seedu.address.model.patient.Patient;
 
-public class AddAppointmentCommand extends AppointmentCommand {
+public class AddAppointmentCommand extends Command {
 
     public static final String COMMAND_WORD = "newappt";
 
@@ -28,7 +29,7 @@ public class AddAppointmentCommand extends AppointmentCommand {
             + PREFIX_APPT_DURATION + "DURATION_IN_MINUTES\n"
             + "Example: " + COMMAND_WORD + " "
             + "1 "
-            + PREFIX_APPT_STARTTIME + "2020-10-23T21:00 "
+            + PREFIX_APPT_STARTTIME + "2020-10-23 21:00 "
             + PREFIX_APPT_DURATION + "60";
 
     public static final String MESSAGE_SUCCESS = "New appointment added: %1$s";
