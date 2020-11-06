@@ -161,6 +161,7 @@ public class JsonAdaptedPatientTest {
     }
 
     @Test
+    // Invalid picture input
     public void toModelType_invalidPicture_throwsIllegalValueException() {
         JsonAdaptedPatient patient =
                 new JsonAdaptedPatient(VALID_NAME, VALID_PHONE, VALID_ICNUMBER, VALID_VISITHISTORY,
@@ -171,6 +172,7 @@ public class JsonAdaptedPatientTest {
     }
 
     @Test
+    // Null picture input
     public void toModelType_nullPicture_throwsIllegalValueException() {
         JsonAdaptedPatient patient = new JsonAdaptedPatient(VALID_NAME, VALID_PHONE, VALID_ICNUMBER, VALID_VISITHISTORY,
                 VALID_ADDRESS, VALID_EMAIL, null,

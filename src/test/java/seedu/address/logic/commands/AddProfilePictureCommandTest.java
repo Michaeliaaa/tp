@@ -24,17 +24,20 @@ public class AddProfilePictureCommandTest {
     private File profilePicture = new File("data/stock_picture.png");
 
     @Test
+    // Null filepath.
     public void constructor_nullPatient_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> new AddProfilePictureCommand(null,
                                                                                     INDEX_FIRST_PATIENT));
     }
 
     @Test
+    // Null patient index.
     public void constructor_nullIndex_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> new AddProfilePictureCommand(profilePicture, null));
     }
 
     @Test
+    // Out of bounds patient index.
     public void execute_invalidPatientIndexUnfilteredList_failure() {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPatientList().size() + 1);
         AddProfilePictureCommand addProfilePictureCommand = new AddProfilePictureCommand(profilePicture,
@@ -44,18 +47,18 @@ public class AddProfilePictureCommandTest {
     }
 
     /**
-     * Edit filtered list where index is larger than size of filtered list,
+     * Edits filtered list where index is larger than size of filtered list,
      * but smaller than size of clinical
      */
     @Test
     public void execute_invalidPatientIndexFilteredList_failure() {
         showPatientAtIndex(model, INDEX_FIRST_PATIENT);
         Index outOfBoundIndex = INDEX_SECOND_PATIENT;
-        // ensures that outOfBoundIndex is still in bounds of clinical list
+        // Asserts that outOfBoundIndex is still in bounds of clinical list
         assertTrue(outOfBoundIndex.getZeroBased() < model.getCliniCal().getPatientList().size());
 
         AddProfilePictureCommand addProfilePictureCommand = new AddProfilePictureCommand(profilePicture,
-                outOfBoundIndex);
+                                                                outOfBoundIndex);
 
         assertCommandFailure(addProfilePictureCommand, model, Messages.MESSAGE_INVALID_PATIENT_DISPLAYED_INDEX);
     }

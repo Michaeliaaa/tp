@@ -329,15 +329,17 @@ This feature comprises the `AddProfilePictureCommand` class. Given below is an e
     <em style="color:#CC5500">Figure 18. Logic Component Interactions for AddProfilePicture Command</em>
 </p>
 
-Step 1. User input is parsed to obtain the patient index and file path of the desired profile picture.
+Step 1. User inputs "addpicture 1 f/data/images/png" command to add profile picture to the first patient. 
 
-Step 2. After successful parsing of user input, the `AddProfilePictureCommand#execute(Model model)` method is called.
+Step 2. User input is parsed to obtain the patient index and file path of the desired profile picture.
 
-Step 3. The `StorageManager#addPicture` method is then called which adds the desired profile picture to the specified patient.
+Step 3. After successful parsing of user input, the `AddProfilePictureCommand#execute(Model model)` method is called.
 
-Step 4. Next, the patient's profile picture is updated in the `Model` by calling the `Model#setPatient` method.
+Step 4. The `StorageManager#addPicture` method is then called which adds the desired profile picture to the specified patient.
 
-Step 5. As a result of the successful update of the patient's profile picture, a `CommandResult` object is instantiated and returned to `LogicManager`.
+Step 5. Next, the patient's profile picture is updated in the `Model` by calling the `Model#setPatient` method.
+
+Step 6. As a result of the successful update of the patient's profile picture, a `CommandResult` object is instantiated and returned to `LogicManager`.
 
 #### 3.2.2 Design consideration
 
@@ -361,29 +363,24 @@ Step 5. As a result of the successful update of the patient's profile picture, a
         * New dependencies need to be created to associate with the newly created `ImageCommand` class.
         * Thus, our team decided to implement the first alternative as it follows the existing architecture closely and minimizes the risk of breaking the existing architecture.
 
-##### 3.2.2.2 Aspect: Image type
+##### 3.2.2.2 Aspect: Image filetypes
 
-* **Current Implementation:** All types of files are accepted, including `.jpg` and `.png`.
-
-    * Pros:
-        * User do not need to convert `.jpg` to `.png` file or vice versa before setting desired image file as profile picture.
-        * This enhances usability.
-
-    * Cons:
-        * Non-image files are still stored in 'data' folder even though the patient's profile picture in CliniCal will not be updated visually.
-
-* **Alternative Implementation:** Accept only some types of files i.e `.jpg` and `.png`.
+* **Current Implementation:** Only `.jpg` and `.png` filetypes are accepted. Using other image filetypes would throw an exception message.
 
     * Pros:
-        * Acts as a form of validation check and non-image files will not be stored in the 'data' folder. This helps to save disk space.
-
+        * This serves as a form of validation check to ensure that the user only uses supported image filetypes.
     * Cons:
-        * User is only limited to certain types of image files.
-        * As such, our team decided to implement the first alternative as this design maximizes application usability.
-        * User will not need to spend additional time converting their images into accepted file types.
-        * Furthermore, our team assessed that users can easily delete non-image files from the 'data' folder if the need arises.
+        * User is limited to `.jpg` and `.png` filetypes.
 
-_{more aspects and alternatives to be added}_
+* **Alternative Implementation:** Accept different image filetypes such as `.raw`, `.tiff` or `.psd`.
+
+    * Pros:
+        * User can freely use any types of image file when adding patients' profile picture.
+    * Cons:
+        * Some filetypes may not be well-supported in JavaFX, for example `.psd` which is a Photoshop document. This may
+          introduce compatibility issues to our application.
+        * Our team assessed that the most common image filetypes are `.jpg` and `.png`. Hence, our team decided to support
+          only `.jpg` and `.png` filetypes in CliniCal.
 
 ### 3.3 View Command History feature
 
@@ -537,7 +534,64 @@ The following sequence diagram shows how the up down arrow key mechanism works:
         * Users require less time to peek through all commands stored in commandHistory as it does not include invalid commands.
     * Cons:
         * Users cannot edit invalid commands and will need to spend more time to retype the valid command.
+        
+### 3.6 Display Profile feature
 
+#### 3.6.1 Implementation
+
+This feature allows users to view individual patients' profile on a separate window. The profile window displays all relevant details that belongs
+to the patient, including past visitation logs. 
+
+The mechanism utilises the following classes and methods to display the patients' profile:
+
+   * `ProfileCommandParser#parse` - Parses the input to return a `ProfileCommand` object
+   * `ProfileCommand#execute` - Executes the command to display patient profile
+   * `ProfileWindow#setup` - Loads all relevant details of the `Patient` into `ProfileWindow`
+   * `MainWindow#handleProfilePanel` - Displays patient's profile
+
+Given below is an example usage scenario and how the mechanism behaves at each step.
+
+Step 1. User inputs "profile 1" command to display the first patient's profile.
+
+Step 2. Input command is parsed to obtain the patient's index, and a `ProfileCommand` object is returned. 
+
+Step 3. The `ProfileCommand#execute(Model model)` method is called and this returns a `CommandResult` object with the first `Patient` instance.
+
+Step 4. Next, `MainWindow#executeCommand` method is executed which in turn calls `ProfileWindow#setup` method. This causes `ProfileWindow` to be 
+        loaded with all relevant details that belongs to the first `Patient`. 
+
+Step 5. Finally, `MainWindow#handleProfilePanel()` method is executed to display the first patient's profile.
+
+<p align="center">
+    <img src="images/ProfileCommandSequenceDiagram.png"/>
+    <br>
+    <em style="color:#CC5500">Figure 26. Sequence Diagram for ProfileCommand</em>
+</p>
+
+The following activity diagram summarizes the main steps taken to display the patient's profile.
+
+<p align="center">
+    <img src="images/ProfileCommandActivityDiagram.png"/>
+    <br>
+    <em style="color:#CC5500">Figure 27. Activity Diagram for steps 1 to 5</em>
+</p>
+
+#### 3.6.2 Design Considerations
+##### 3.6.2.1 Aspect: How patient's details are retrieved and displayed in ProfileWindow
+
+* **Current Implementation:** Patient details are obtained solely from `Patient` class.
+    * Pros:
+        * Easy to implement as mechanism can be extended from existing AB3 architecture.
+    * Cons:
+        * Increases coupling between `Patient` class and `ProfileWindow` class. This may lead to unforeseen dependency issues.
+ * **Alternative Implementation:** Utilize a separate `Profile` class to copy and store patient's details everytime `ProfileCommand` is issued.
+    * Pros:
+        * Less coupling between `Patient` and `ProfileWindow` class. Instead, `Profile` class will act as a facade class as part of Facade pattern architecture.
+    * Cons:
+        * Requires re-implementation of current codebase which might introduce subtle bugs.
+        * Need to ensure that functionality of the `Profile` facade class is optimized. Our team assessed that the current 
+          implementation is better as it is less prone to introduce new bugs to our existing codebase.
+        
 --------------------------------------------------------------------------------------------------------------------
 
 ## **4. Documentation**
@@ -710,7 +764,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
   **Extensions**
 
-  * 1a. The file being dragged into ClinCal application is not a valid image file.
+  * 1a. The file being dragged into CliniCal application is not a valid image file.
       * 1a1. Patient profile picture is not updated.
 
     Use case resumes at step 1.
@@ -770,6 +824,23 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 2. CliniCal shows a message that the command history is cleared.
 
       Use case ends.
+      
+##### Use case: UC10 - Displaying patient's profile
+
+**MSS**
+
+1. User keys in command to display patient's profile.
+2. CliniCal displays the specified patient's profile.
+3. User presses esc or 'close' button to exit the window.
+
+    Use case ends.
+
+**Extensions**
+
+* 1a. The given command is invalid.
+    * 1a1. CliniCal shows an error message.
+
+    Use case resumes at step 1.
 
 ## **Appendix D: Non-Functional Requirements**
 

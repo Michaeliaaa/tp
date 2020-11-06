@@ -2,6 +2,7 @@ package seedu.address.logic.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_DURATION;
 import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PATIENT;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.allergy.Allergy;
+import seedu.address.model.appointment.AppointmentDateTime;
 import seedu.address.model.patient.Address;
 import seedu.address.model.patient.BloodType;
 import seedu.address.model.patient.Email;
@@ -330,21 +332,24 @@ public class ParserUtilTest {
     // Test for error in date.
     @Test
     public void parseDateTime_invalidDateTime_throwsParseException() {
-        assertThrows(ParseException.class, "Times should be entered in the format: yyyy-MM-dd HH:mm", ()
-            -> ParserUtil.parseDateTime("test"));
+        assertThrows(ParseException.class,
+                AppointmentDateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDateTime("test"));
     }
 
     // Test for error in date time.
     @Test
     public void parseDuration_invalidDateTime_throwsParseException() {
-        assertThrows(ParseException.class, "Times should be entered in the format: yyyy-MM-dd HH:mm", ()
-            -> ParserUtil.parseDurationWithStart("test", "30"));
+        assertThrows(ParseException.class,
+                AppointmentDateTime.MESSAGE_CONSTRAINTS, ()
+                -> ParserUtil.parseDurationWithStart("test", "30"));
     }
 
     // Test for error in duration.
     @Test
     public void parseDuration_invalidDuration_throwsParseException() {
-        assertThrows(ParseException.class, "Times should be entered in the format: yyyy-MM-dd HH:mm", ()
-            -> ParserUtil.parseDurationWithStart("2020-10-10", "test"));
+        assertThrows(ParseException.class,
+                MESSAGE_INVALID_DURATION, ()
+                -> ParserUtil.parseDurationWithStart("10/10/2030 09:30", "test"));
     }
 }

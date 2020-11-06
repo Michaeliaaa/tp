@@ -49,7 +49,6 @@ public class PatientProfileUtil {
                 stringBuilder.append("; ");
             }
         }
-
         return stringBuilder.toString();
     }
 

@@ -1,5 +1,6 @@
 package seedu.address.ui;
 
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import javafx.collections.ObservableList;
@@ -8,7 +9,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
 import seedu.address.commons.core.LogsCenter;
-import seedu.address.logic.Logic;
 import seedu.address.model.patient.Patient;
 
 /**
@@ -20,14 +20,14 @@ public class PatientListPanel extends UiPart<Region> {
 
     @FXML
     private ListView<Patient> patientListView;
-    private final Logic logic;
+    private final Consumer<String> executor;
 
     /**
      * Creates a {@code PatientListPanel} with the given {@code ObservableList}.
      */
-    public PatientListPanel(ObservableList<Patient> patientList, Logic logic) {
+    public PatientListPanel(ObservableList<Patient> patientList, Consumer<String> executor) {
         super(FXML);
-        this.logic = logic;
+        this.executor = executor;
         patientListView.setItems(patientList);
         patientListView.setCellFactory(listView -> new PatientListViewCell());
     }
@@ -44,7 +44,7 @@ public class PatientListPanel extends UiPart<Region> {
                 setGraphic(null);
                 setText(null);
             } else {
-                setGraphic(new PatientCard(patient, getIndex() + 1, logic).getRoot());
+                setGraphic(new PatientCard(patient, getIndex() + 1, executor).getRoot());
             }
         }
     }

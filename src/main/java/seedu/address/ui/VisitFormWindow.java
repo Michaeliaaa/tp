@@ -16,10 +16,15 @@ import javafx.stage.WindowEvent;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
+import seedu.address.logic.commands.EditVisitCommand;
 import seedu.address.logic.commands.SaveVisitCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.visit.Visit;
 
+//@@author Q-gabe-reused
+//Reused from
+//https://github.com/AY1920S1-CS2103T-F12-2/main/blob/master/src/main/java/unrealunity/visit/ui/VisitRecordWindow.java
+//with modifications
 /**
  * Instantiates a window for logging visit details.
  *
@@ -49,9 +54,9 @@ public class VisitFormWindow extends UiPart<Stage> {
     private Logic logic;
 
     /**
-     * Instantiates VisitRecordWindow.
+     * Instantiates VisitFormWindow.
      *
-     * @param root Stage to use for VisitRecordWindow
+     * @param root Stage to use for VisitFormWindow
      */
 
     public VisitFormWindow(EventHandler<WindowEvent> e, Stage root) {
@@ -61,17 +66,17 @@ public class VisitFormWindow extends UiPart<Stage> {
     }
 
     /**
-     * Instantiates VisitRecordWindow.
+     * Instantiates VisitFormWindow.
      */
     public VisitFormWindow(EventHandler<WindowEvent> e) {
         this(e, new Stage());
     }
 
     /**
-     * Displays VisitRecordWindow.
+     * Displays VisitFormWindow.
      */
     public void show() {
-        logger.fine("Displaying Visit Record Window..");
+        logger.fine("Displaying Visit Form Window..");
         getRoot().show();
         getRoot().centerOnScreen();
         getRoot().addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
@@ -83,21 +88,21 @@ public class VisitFormWindow extends UiPart<Stage> {
     }
 
     /**
-     * Checks if VisitRecordWindow is being displayed.
+     * Checks if VisitFormWindow is being displayed.
      */
     public boolean isShowing() {
         return getRoot().isShowing();
     }
 
     /**
-     * Hides VisitRecordWindow.
+     * Hides VisitFormWindow.
      */
     public void hide() {
         getRoot().hide();
     }
 
     /**
-     * Removes all parameters in VisitWindow.
+     * Removes all parameters in VisitFormWindow.
      */
     public void flushParameters() {
         prescription.clear();
@@ -106,14 +111,14 @@ public class VisitFormWindow extends UiPart<Stage> {
     }
 
     /**
-     * Focuses on VisitRecordWindow.
+     * Focuses on the Diagnosis tab in VisitFormWindow.
      */
     public void focus() {
-        getRoot().requestFocus();
+        diagnosis.requestFocus();
     }
 
     /**
-     * Saves visit and exits VisitRecordWindow.
+     * Saves visit and exits VisitFormWindow.
      */
     @FXML
     protected void saveVisit(ActionEvent actionEvent) throws CommandException {
@@ -121,8 +126,8 @@ public class VisitFormWindow extends UiPart<Stage> {
         String diagnosisString = diagnosis.getText();
         String commentString = comment.getText();
 
-        SaveVisitCommand saveCommand = new SaveVisitCommand(patientIndex, visitDate, prescriptionString,
-                                                            diagnosisString, commentString, visitIndex);
+        SaveVisitCommand saveCommand = new SaveVisitCommand(patientIndex, visitDate, diagnosisString,
+            prescriptionString, commentString, visitIndex);
 
         CommandResult commandResult = logic.execute(saveCommand);
         this.feedbackMessage = commandResult.getFeedbackToUser();
@@ -137,11 +142,15 @@ public class VisitFormWindow extends UiPart<Stage> {
         this.visitIndex = INVALID_VISIT_INDEX;
     }
 
-    public void setPreviousVisitDetails(Logic logic, Visit visit, int visitIndex, int patientIndex) {
+    public void setPreviousVisitDetails(Logic logic, Visit visit, int visitIndex, int patientIndex, String visitDate) {
         this.logic = logic;
         this.visitIndex = visitIndex;
         this.patientIndex = patientIndex;
-        this.visitDate = visit.getVisitDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        if (visitDate.equals(EditVisitCommand.EMPTY_VISIT_DATE)) {
+            this.visitDate = visit.getVisitDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        } else {
+            this.visitDate = visitDate;
+        }
 
         String prescriptionToSet = visit.getPrescription();
         String diagnosisToSet = visit.getDiagnosis();

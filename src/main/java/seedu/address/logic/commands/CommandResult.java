@@ -85,9 +85,10 @@ public class CommandResult {
      * Constructs a {@code CommandResult} with the specified {@code feedbackToUser}.
      * This constructor is used for editing visits.
      */
-    public CommandResult(String feedbackToUser, ObservableList<Visit> visitHistory,
+    public CommandResult(String feedbackToUser, String visitDate, ObservableList<Visit> visitHistory,
                          Visit previousVisit, int visitIndex, int patientIndex) {
         this(feedbackToUser, false, false, false, true, false, false);
+        this.visitDate = visitDate;
         this.visitHistory = visitHistory;
         this.previousVisit = previousVisit;
         this.visitIndex = visitIndex;

@@ -45,7 +45,8 @@ public class AddProfilePictureCommandParserTest {
 
     @Test
     public void parse_invalidValue_failure() {
-        assertParseFailure(parser, "2" + INVALID_FILEPATH_DESC, MESSAGE_INVALID_FORMAT); // invalid name
+        // invalid name and filepath
+        assertParseFailure(parser, "2" + INVALID_FILEPATH_DESC, MESSAGE_INVALID_FORMAT);
     }
 
     @Test

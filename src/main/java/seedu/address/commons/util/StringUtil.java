@@ -18,7 +18,7 @@ public class StringUtil {
      *       containsWordIgnoreCase("ABc def", "abc") == true
      *       containsWordIgnoreCase("ABc def", "DEF") == true
      *       containsWordIgnoreCase("ABc def", "gh") == false
-     *       containsWordIgnoreCase("ABc def", "AB") == true //partial matching
+     *       containsWordIgnoreCase("ABc def", "AB") == true // Partial matching
      *       </pre>
      * @param sentence cannot be null
      * @param word cannot be null, cannot be empty, must be a single word
@@ -35,39 +35,26 @@ public class StringUtil {
         String preppedSentence = sentence;
         String[] wordsInPreppedSentence = preppedSentence.split("\\s+");
 
-        boolean subSeqFlagLower;
-        boolean subSeqFlagUpper;
+        boolean flagLower;
+        boolean flagUpper;
         boolean checkFlag = false;
 
         for (String testString: wordsInPreppedSentence) {
+            // To prepare user input in both lower and upper cases
             String preppedWordLower = preppedWord.toLowerCase();
             String preppedWordUpper = preppedWord.toUpperCase();
+            // To prepare clinical data in both lower and upper cases
             String checkingStringLower = testString.toLowerCase();
             String checkingStringUpper = testString.toUpperCase();
 
-            subSeqFlagLower = isSubSequencePresent(preppedWordLower, checkingStringLower);
-            subSeqFlagUpper = isSubSequencePresent(preppedWordUpper, checkingStringUpper);
-            if (subSeqFlagLower || subSeqFlagUpper) {
+            // Return true if user input string matches either partially or fully with patient's name or IC
+            flagLower = checkingStringLower.contains(preppedWordLower);
+            flagUpper = checkingStringUpper.contains(preppedWordUpper);
+            if (flagLower || flagUpper) {
                 checkFlag = true;
             }
         }
         return checkFlag;
-    }
-
-    private static boolean isSubSequencePresent(String firstString, String secondString) {
-        int j = 0;
-        int firstStringLength = firstString.length();
-        int secondStringLength = secondString.length();
-        for (int i = 0; i < secondStringLength; i++) {
-            if (firstString.charAt(j) == secondString.charAt(i)) {
-                ++j;
-            }
-
-            if (j == firstStringLength) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

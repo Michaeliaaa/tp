@@ -10,10 +10,10 @@ import jfxtras.icalendarfx.components.VEvent;
  */
 public class VEventBuilder {
 
-    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     public static final String DEFAULT_NAME = "Danny Williams";
-    public static final String DEFAULT_START_TIME = "2020-02-02 14:20";
-    public static final String DEFAULT_END_TIME = "2020-02-02 14:35";
+    public static final String DEFAULT_START_TIME = "02/02/2020 14:20";
+    public static final String DEFAULT_END_TIME = "02/02/2020 14:35";
 
     private String patientName;
     private String startTime;

@@ -103,7 +103,7 @@ public class Patient {
     }
 
     /**
-     * Returns true if both patients have the same name, IC, and phone number.
+     * Returns true if both patients have the same NRIC.
      * This defines a weaker notion of equality between two patients.
      */
     public boolean isSamePatient(Patient otherPatient) {
@@ -112,9 +112,7 @@ public class Patient {
         }
 
         return otherPatient != null
-                && otherPatient.getName().equals(getName())
-                && otherPatient.getIcNumber().equals(getIcNumber())
-                && otherPatient.getPhone().equals(getPhone());
+                && otherPatient.getIcNumber().equals(getIcNumber());
     }
 
     /**
@@ -168,11 +166,11 @@ public class Patient {
                 .append(getSex() + "\n")
                 .append("Blood Type: ")
                 .append(getBloodType() + "\n")
-                .append("ColorTag: ")
+                .append("Color Tag: ")
                 .append(getColorTag() + "\n")
-                .append(getVisitHistory() + "\n")
-                .append("Allergies: ");
+                .append("Allergies:  ");
         getAllergies().forEach(builder::append);
+        builder.append(", ");
         return builder.toString();
     }
 

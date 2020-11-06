@@ -36,7 +36,7 @@ public class CommandResultTest {
         assertFalse(commandResult.equals(new CommandResult("feedback", null)));
 
         // different idx value -> returns false
-        assertFalse(commandResult.equals(new CommandResult("feedback", null, null,
+        assertFalse(commandResult.equals(new CommandResult("feedback", null, null, null,
                                                    1, 1)));
 
         // different idx value -> returns false
@@ -88,6 +88,7 @@ public class CommandResultTest {
         assertEquals(secondCommand.isShowHelp(), false);
         assertNotEquals(secondCommand.isDisplayProfile(), false);
 
+        // Test for valid visit date for patient with index 2
         CommandResult thirdCommand = new CommandResult("feedback", "10/11/2020", 2);
 
         assertNotEquals(thirdCommand.getPatientProfile(), TypicalPatients.ALICE);
@@ -103,14 +104,12 @@ public class CommandResultTest {
     @Test
     public void showHelp() {
         CommandResult commandResult = new CommandResult("help");
-
         assertEquals(commandResult.isShowHelp(), false);
     }
 
     @Test
     public void exit() {
         CommandResult commandResult = new CommandResult("exit");
-
         assertEquals(commandResult.isShowHelp(), false);
     }
 }

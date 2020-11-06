@@ -1,5 +1,6 @@
 package seedu.address.ui;
 
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import javafx.collections.ObservableList;
@@ -42,7 +43,7 @@ public class MainWindow extends UiPart<Stage> {
     private ProfileWindow profilePanel;
     private VisitFormWindow visitWindow;
     private ProfileVisitPanel profileVisitPanel;
-    private EmptyVisitList emptyVisitList;
+    private EmptyVisitHistory emptyVisitHistory;
 
     @FXML
     private StackPane commandBoxPlaceholder;
@@ -64,6 +65,14 @@ public class MainWindow extends UiPart<Stage> {
 
     @FXML
     private StackPane statusbarPlaceholder;
+
+    private Consumer<String> executorConsumer = s -> {
+        try {
+            executeCommand(s);
+        } catch (CommandException | ParseException e) {
+            e.getMessage();
+        }
+    };
 
     /**
      * Creates a {@code MainWindow} with the given {@code Stage} and {@code Logic}.
@@ -87,7 +96,7 @@ public class MainWindow extends UiPart<Stage> {
         });
         profilePanel = new ProfileWindow();
         profileVisitPanel = new ProfileVisitPanel();
-        emptyVisitList = new EmptyVisitList();
+        emptyVisitHistory = new EmptyVisitHistory();
     }
 
     public Stage getPrimaryStage() {
@@ -132,7 +141,7 @@ public class MainWindow extends UiPart<Stage> {
      * Fills up all the placeholders of this window.
      */
     void fillInnerParts() {
-        patientListPanel = new PatientListPanel(logic.getFilteredPatientList(), logic);
+        patientListPanel = new PatientListPanel(logic.getFilteredPatientList(), executorConsumer);
         patientListPanelPlaceholder.getChildren().add(patientListPanel.getRoot());
 
         resultDisplay = new ResultDisplay();
@@ -206,6 +215,7 @@ public class MainWindow extends UiPart<Stage> {
 
         if (!visitWindow.isShowing()) {
             visitWindow.show();
+            visitWindow.focus();
         } else {
             visitWindow.focus();
         }
@@ -217,10 +227,10 @@ public class MainWindow extends UiPart<Stage> {
      */
     @FXML
     public void handleEmptyVisitHistory() {
-        if (!emptyVisitList.isShowing()) {
-            emptyVisitList.show();
+        if (!emptyVisitHistory.isShowing()) {
+            emptyVisitHistory.show();
         } else {
-            emptyVisitList.focus();
+            emptyVisitHistory.focus();
         }
     }
 
@@ -268,7 +278,7 @@ public class MainWindow extends UiPart<Stage> {
             }
 
             if (commandResult.isEditVisit()) {
-                visitWindow.setPreviousVisitDetails(logic, previousVisit, visitIndex, patientIndex);
+                visitWindow.setPreviousVisitDetails(logic, previousVisit, visitIndex, patientIndex, visitDate);
                 if (profileVisitPanel.isShowing()) {
                     profileVisitPanel.hide();
                 }
@@ -292,7 +302,8 @@ public class MainWindow extends UiPart<Stage> {
             return commandResult;
         } catch (CommandException | ParseException e) {
             logger.info("Invalid command: " + commandText);
-            resultDisplay.setFeedbackToUser(e.getMessage());
+            resultDisplay.setFeedbackToUser("If the error message below does not apply, please check that "
+                    + "there are no misspellings in your command, especially in the prefixes!\n\n" + e.getMessage());
             throw e;
         }
     }

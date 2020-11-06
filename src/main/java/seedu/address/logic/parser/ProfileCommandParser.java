@@ -28,7 +28,6 @@ public class ProfileCommandParser implements Parser<ProfileCommand> {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ProfileCommand.MESSAGE_USAGE),
                                      exception);
         }
-
         return new ProfileCommand(patientIndex);
     }
 }

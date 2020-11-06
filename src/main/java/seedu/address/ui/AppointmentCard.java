@@ -42,9 +42,10 @@ public class AppointmentCard extends UiPart<Region> {
         name.setText(appointment.getPatientName().fullName);
         icNumber.setText("IC: " + appointment.getPatientIc().value);
         startTime.setText(formatter.format(appointment.getStartTime().dateTime));
-        duration.setText("Duration: "
-                + ChronoUnit.MINUTES.between(appointment.getStartTime().dateTime, appointment.getEndTime().dateTime)
-                        + " minutes");
+
+        int minutes = (int) ChronoUnit.MINUTES
+                        .between(appointment.getStartTime().dateTime, appointment.getEndTime().dateTime);
+        duration.setText("Duration: " + minutes + (minutes == 1 ? " minute" : " minutes"));
     }
 
     @Override

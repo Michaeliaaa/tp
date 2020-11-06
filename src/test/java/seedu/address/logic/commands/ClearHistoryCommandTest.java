@@ -18,4 +18,7 @@ public class ClearHistoryCommandTest {
         ClearHistoryCommand clearHistoryCommand = new ClearHistoryCommand();
         assertCommandSuccess(clearHistoryCommand, model, ClearHistoryCommand.MESSAGE_SUCCESS, model);
     }
+
+
+
 }

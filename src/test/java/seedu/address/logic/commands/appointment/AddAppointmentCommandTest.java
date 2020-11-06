@@ -2,7 +2,19 @@ package seedu.address.logic.commands.appointment;
 
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_END_TIME_FIRST;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_END_TIME_SECOND;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_PATIENT_IC_FIRST;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_PATIENT_IC_SECOND;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_PATIENT_NAME_FIRST;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_PATIENT_NAME_SECOND;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_START_TIME_FIRST;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_START_TIME_SECOND;
+import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
+import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.Assert.assertThrows;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PATIENT;
+import static seedu.address.testutil.TypicalPatients.getTypicalCliniCal;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -14,29 +26,81 @@ import org.junit.jupiter.api.Test;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.commons.core.Messages;
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.CliniCal;
 import seedu.address.model.Model;
+import seedu.address.model.ModelManager;
 import seedu.address.model.ReadOnlyCliniCal;
 import seedu.address.model.ReadOnlyUserPrefs;
+import seedu.address.model.UserPrefs;
 import seedu.address.model.appointment.Appointment;
+import seedu.address.model.appointment.AppointmentDateTime;
 import seedu.address.model.patient.Patient;
 import seedu.address.testutil.AppointmentBuilder;
 
 public class AddAppointmentCommandTest {
 
+    private Model model = new ModelManager(getTypicalCliniCal(), new UserPrefs());
     @Test
     public void constructor_nullAppointment_throwsAssertionError() {
         assertThrows(AssertionError.class, () -> new AddAppointmentCommand(null, null, null));
     }
 
     @Test
+    public void constructor_nullIndex_throwsAssertionError() {
+        assertThrows(AssertionError.class, () -> new AddAppointmentCommand(null,
+                new AppointmentDateTime("12/12/2020 12:00"), new AppointmentDateTime("12/12/2020 13:00")));
+    }
+
+    @Test
+    public void constructor_nullStartTime_throwsAssertionError() {
+        assertThrows(AssertionError.class, () -> new AddAppointmentCommand(Index.fromZeroBased(0),
+                null, new AppointmentDateTime("12/12/2020 13:00")));
+    }
+
+    @Test
+    public void constructor_nullEndTime_throwsAssertionError() {
+        assertThrows(AssertionError.class, () -> new AddAppointmentCommand(Index.fromZeroBased(0),
+                new AppointmentDateTime("12/12/2020 12:00"), null));
+    }
+
+    @Test
+    public void execute_validIndexUnfilteredList_success() {
+        Patient patientToAdd = model.getFilteredPatientList().get(INDEX_FIRST_PATIENT.getZeroBased());
+        Appointment appointmentToAdd = new Appointment(patientToAdd.getName(), patientToAdd.getIcNumber(),
+                new AppointmentDateTime("12/12/2020 12:00"), new AppointmentDateTime("12/12/2020 13:00"));
+        AddAppointmentCommand addAppointmentCommand = new AddAppointmentCommand(appointmentToAdd);
+
+        String expectedMessage = String.format(AddAppointmentCommand.MESSAGE_SUCCESS, appointmentToAdd);
+
+        ModelManager expectedModel = new ModelManager(model.getCliniCal(), new UserPrefs());
+        expectedModel.addAppointment(appointmentToAdd);
+
+        assertCommandSuccess(addAppointmentCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_invalidIndexUnfilteredList_throwsCommandException() {
+        Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPatientList().size() + 1);
+        AddAppointmentCommand addAppointmentCommand = new AddAppointmentCommand(outOfBoundIndex,
+                new AppointmentDateTime("12/12/2020 12:00"), new AppointmentDateTime("12/12/2020 13:00"));
+
+        assertCommandFailure(addAppointmentCommand, model, Messages.MESSAGE_INVALID_PATIENT_DISPLAYED_INDEX);
+    }
+
+    @Test
     public void execute_appointmentAcceptedByModel_addSuccessful() throws Exception {
         AddAppointmentCommandTest.ModelStubAcceptingAppointmentAdded modelStub = new AddAppointmentCommandTest
                 .ModelStubAcceptingAppointmentAdded();
-        Appointment validAppointment = new AppointmentBuilder().withPatientName("Alice").withPatientIc("S1234567A")
-                .withStartTime("2020-10-25 12:00").withEndTime("2020-10-25 13:00").build();
+        Appointment validAppointment = new AppointmentBuilder()
+                .withPatientName(VALID_PATIENT_NAME_FIRST)
+                .withPatientIc(VALID_PATIENT_IC_FIRST)
+                .withStartTime(VALID_START_TIME_FIRST)
+                .withEndTime(VALID_END_TIME_FIRST)
+                .build();
 
         CommandResult commandResult = new AddAppointmentCommand(validAppointment).execute(modelStub);
 
@@ -47,8 +111,12 @@ public class AddAppointmentCommandTest {
 
     @Test
     public void execute_conflictingAppointment_throwsCommandException() {
-        Appointment validAppointment = new AppointmentBuilder().withPatientName("Alice").withPatientIc("S1234567A")
-                .withStartTime("2020-10-25 12:00").withEndTime("2020-10-25 13:00").build();
+        Appointment validAppointment = new AppointmentBuilder()
+                .withPatientName(VALID_PATIENT_NAME_FIRST)
+                .withPatientIc(VALID_PATIENT_IC_FIRST)
+                .withStartTime(VALID_START_TIME_FIRST)
+                .withEndTime(VALID_END_TIME_FIRST)
+                .build();
         AddAppointmentCommand addAppointmentCommand = new AddAppointmentCommand(validAppointment);
         AddAppointmentCommandTest.ModelStub modelStub = new AddAppointmentCommandTest
                 .ModelStubWithAppointment(validAppointment);
@@ -58,10 +126,18 @@ public class AddAppointmentCommandTest {
 
     @Test
     public void equals() {
-        Appointment aliceAppointment = new AppointmentBuilder().withPatientName("Alice")
-                .withPatientIc("S1234567A").withStartTime("2020-10-25 12:00").withEndTime("2020-10-25 13:00").build();
-        Appointment bobAppointment = new AppointmentBuilder().withPatientName("Bob")
-                .withPatientIc("S7654321Z").withStartTime("2020-10-25 13:00").withEndTime("2020-10-25 14:00").build();
+        Appointment aliceAppointment = new AppointmentBuilder()
+                .withPatientName(VALID_PATIENT_NAME_FIRST)
+                .withPatientIc(VALID_PATIENT_IC_FIRST)
+                .withStartTime(VALID_START_TIME_FIRST)
+                .withEndTime(VALID_END_TIME_FIRST)
+                .build();
+        Appointment bobAppointment = new AppointmentBuilder()
+                .withPatientName(VALID_PATIENT_NAME_SECOND)
+                .withPatientIc(VALID_PATIENT_IC_SECOND)
+                .withStartTime(VALID_START_TIME_SECOND)
+                .withEndTime(VALID_END_TIME_SECOND)
+                .build();
         AddAppointmentCommand addAliceAppointmentCommand = new AddAppointmentCommand(aliceAppointment);
         AddAppointmentCommand addBobAppointmentCommand = new AddAppointmentCommand(bobAppointment);
 

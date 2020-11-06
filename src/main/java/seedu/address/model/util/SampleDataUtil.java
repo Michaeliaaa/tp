@@ -1,5 +1,9 @@
 package seedu.address.model.util;
 
+import static seedu.address.model.appointment.AppointmentDateTime.DATE_TIME_FORMATTER;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
@@ -27,8 +31,12 @@ import seedu.address.model.visit.VisitHistory;
  * Contains utility methods for populating {@code CliniCal} with sample data.
  */
 public class SampleDataUtil {
-    public static final VisitHistory EMPTY_VISIT_HISTORY1 = new VisitHistory(new ArrayList<Visit>());
-    public static final VisitHistory EMPTY_VISIT_HISTORY2 = new VisitHistory(new ArrayList<Visit>());
+    public static final VisitHistory VISIT_HISTORY1 =
+        new VisitHistory(new ArrayList<Visit>()).addVisit(new Visit(LocalDate.of(2020, 10, 28),
+            new Name("Alex Yeoh"), "Reflux esophagitis", "Synthroid", "No need to follow up"));
+    public static final VisitHistory VISIT_HISTORY2 =
+        new VisitHistory(new ArrayList<Visit>()).addVisit(new Visit(LocalDate.of(2020, 9, 3),
+            new Name("Bernice Yu"), "COVID-19", "Remdesivir", "Quarantined for 14 days"));
     public static final VisitHistory EMPTY_VISIT_HISTORY3 = new VisitHistory(new ArrayList<Visit>());
     public static final VisitHistory EMPTY_VISIT_HISTORY4 = new VisitHistory(new ArrayList<Visit>());
     public static final VisitHistory EMPTY_VISIT_HISTORY5 = new VisitHistory(new ArrayList<Visit>());
@@ -39,11 +47,11 @@ public class SampleDataUtil {
         ColorTag placeholderColorTag = new ColorTag();
 
         return new Patient[] {
-            new Patient(new Name("Alex Yeoh"), new Phone("87438807"), new IcNumber("S7908430A"), EMPTY_VISIT_HISTORY1,
+            new Patient(new Name("Alex Yeoh"), new Phone("87438807"), new IcNumber("S7908430A"), VISIT_HISTORY1,
                     new Address("Blk 30 Geylang Street 29, #06-40"), new Email("alexyeoh@example.com"),
                     profilePicture, new Sex("M"), new BloodType("A+"),
                     getAllergySet("penicillin"), placeholderColorTag),
-            new Patient(new Name("Bernice Yu"), new Phone("99272758"), new IcNumber("G4329854B"), EMPTY_VISIT_HISTORY2,
+            new Patient(new Name("Bernice Yu"), new Phone("99272758"), new IcNumber("G4329854B"), VISIT_HISTORY2,
                     new Address("Blk 30 Lorong 3 Serangoon Gardens, #07-18"), new Email("berniceyu@example.com"),
                     profilePicture, new Sex("F"), new BloodType("B+"),
                     getAllergySet("sulfa", "penicillin"), new ColorTag("maroon")),
@@ -67,17 +75,27 @@ public class SampleDataUtil {
     }
 
     public static Appointment[] getSampleAppointments() {
+        String start1 = LocalDateTime.now().plusMinutes(10).format(DATE_TIME_FORMATTER);
+        String end1 = LocalDateTime.now().plusMinutes(70).format(DATE_TIME_FORMATTER);
+        String start2 = LocalDateTime.now().plusDays(1).minusMinutes(90).format(DATE_TIME_FORMATTER);
+        String end2 = LocalDateTime.now().plusDays(1).minusMinutes(30).format(DATE_TIME_FORMATTER);
+        String start3 = LocalDateTime.now().plusDays(1).plusMinutes(10).format(DATE_TIME_FORMATTER);
+        String end3 = LocalDateTime.now().plusDays(1).plusMinutes(70).format(DATE_TIME_FORMATTER);
+        String start4 = LocalDateTime.now().plusDays(2).plusMinutes(20).format(DATE_TIME_FORMATTER);
+        String end4 = LocalDateTime.now().plusDays(2).plusMinutes(140).format(DATE_TIME_FORMATTER);
+        String start5 = LocalDateTime.now().plusDays(2).plusMinutes(160).format(DATE_TIME_FORMATTER);
+        String end5 = LocalDateTime.now().plusDays(2).plusMinutes(220).format(DATE_TIME_FORMATTER);
         return new Appointment[] {
             new Appointment(new Name("Alex Yeoh"), new IcNumber("G4329854B"),
-                    new AppointmentDateTime("2020-10-30 10:20"), new AppointmentDateTime("2020-10-30 11:40")),
+                    new AppointmentDateTime(start1), new AppointmentDateTime(end1)),
             new Appointment(new Name("Bernice Yu"), new IcNumber("S7908430A"),
-                    new AppointmentDateTime("2020-10-30 14:00"), new AppointmentDateTime("2020-10-30 16:20")),
+                    new AppointmentDateTime(start2), new AppointmentDateTime(end2)),
             new Appointment(new Name("Charlotte Oliveiro"), new IcNumber("S7856411C"),
-                    new AppointmentDateTime("2020-10-31 08:50"), new AppointmentDateTime("2020-10-31 10:10")),
+                    new AppointmentDateTime(start3), new AppointmentDateTime(end3)),
             new Appointment(new Name("David Li"), new IcNumber("F1155948D"),
-                    new AppointmentDateTime("2020-10-31 10:30"), new AppointmentDateTime("2020-10-31 11:40")),
+                    new AppointmentDateTime(start4), new AppointmentDateTime(end4)),
             new Appointment(new Name("Irfan Ibrahim"), new IcNumber("S1568938I"),
-                    new AppointmentDateTime("2020-10-31 12:00"), new AppointmentDateTime("2020-10-31 13:15"))
+                    new AppointmentDateTime(start5), new AppointmentDateTime(end5))
         };
     }
 

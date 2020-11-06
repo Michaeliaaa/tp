@@ -48,6 +48,8 @@ public class DeleteVisitCommand extends Command {
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
+        assert model != null : "Model cannot be null.";
+
         List<Patient> lastShownList = model.getFilteredPatientList();
         int listSize = lastShownList.size();
 
@@ -69,8 +71,9 @@ public class DeleteVisitCommand extends Command {
             }
         } else {
             try {
+                VisitHistory newVisitHistory = VisitHistory.deepCopyVisitHistory(patientToEdit.getVisitHistory());
                 patientEdited = new Patient(patientToEdit.getName(), patientToEdit.getPhone(),
-                        patientToEdit.getIcNumber(), patientToEdit.getVisitHistory().deleteVisit(visitIndex),
+                        patientToEdit.getIcNumber(), newVisitHistory.deleteVisit(visitIndex),
                         patientToEdit.getAddress(), patientToEdit.getEmail(), patientToEdit.getProfilePicture(),
                         patientToEdit.getSex(), patientToEdit.getBloodType(), patientToEdit.getAllergies(),
                         patientToEdit.getColorTag());
@@ -82,7 +85,8 @@ public class DeleteVisitCommand extends Command {
         }
 
         model.updateFilteredPatientList(Model.PREDICATE_SHOW_ALL_PATIENTS);
-        model.commitCliniCal(String.format(Messages.MESSAGE_UNDONE_REDONE_INPUT, COMMAND_WORD, patientEdited));
+        model.commitCliniCal(String.format(Messages.MESSAGE_UNDONE_REDONE_INPUT, COMMAND_WORD + " for the following "
+            + "patient:\n", patientEdited));
 
         return new CommandResult(String.format(MESSAGE_DELETE_VISIT_SUCCESS, patientToEdit), observableHistory);
     }

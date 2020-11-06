@@ -60,7 +60,8 @@ public class EditAppointmentCommandTest {
         Appointment lastAppointment = model.getFilteredAppointmentList().get(indexLastAppointment.getZeroBased());
 
         AppointmentBuilder appointmentInList = new AppointmentBuilder(lastAppointment);
-        Appointment editedAppointment = appointmentInList.withPatientName(VALID_PATIENT_NAME_FIRST)
+        Appointment editedAppointment = appointmentInList
+                .withPatientName(VALID_PATIENT_NAME_FIRST)
                 .withPatientIc(VALID_PATIENT_IC_FIRST)
                 .withStartTime(VALID_START_TIME_FIRST)
                 .withEndTime(VALID_END_TIME_FIRST)

@@ -40,6 +40,6 @@ public class HistoryCommandTest {
     void execute_nonEmptyHistory_success() {
         CommandHistory.clearHistory();
         HistoryCommand historyCommand = new HistoryCommand();
-        assertCommandSuccess(historyCommand, model, "Here are your command history:", model);
+        assertCommandSuccess(historyCommand, model, "Here is your command history:", model);
     }
 }

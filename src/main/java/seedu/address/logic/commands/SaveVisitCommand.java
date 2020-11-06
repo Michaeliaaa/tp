@@ -2,6 +2,7 @@ package seedu.address.logic.commands;
 
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PATIENTS;
 
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import seedu.address.commons.core.Messages;
@@ -12,6 +13,7 @@ import seedu.address.model.Model;
 import seedu.address.model.patient.Name;
 import seedu.address.model.patient.Patient;
 import seedu.address.model.visit.Visit;
+import seedu.address.model.visit.VisitHistory;
 
 public class SaveVisitCommand extends Command {
     public static final String MESSAGE_SAVE_VISIT_SUCCESS = "Successfully saved visit for the "
@@ -24,6 +26,7 @@ public class SaveVisitCommand extends Command {
     private String diagnosis;
     private String prescription;
     private String comments;
+    private String visitDate;
     private int visitIndex;
 
     /**
@@ -34,6 +37,7 @@ public class SaveVisitCommand extends Command {
         CollectionUtil.requireAllNonNull(patientIndex, visitIndex, visitDate);
 
         this.patientIndex = Index.fromOneBased(patientIndex);
+        this.visitDate = visitDate;
         this.visit = new Visit(visitDate);
         this.diagnosis = diagnosis;
         this.prescription = prescription;
@@ -43,6 +47,8 @@ public class SaveVisitCommand extends Command {
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
+        assert model != null : "Model cannot be null";
+
         List<Patient> lastShownList = model.getFilteredPatientList();
         int sizeOfList = lastShownList.size();
 
@@ -54,16 +60,26 @@ public class SaveVisitCommand extends Command {
         Name patientName = patientToEdit.getName();
         visit.setPatientName(patientName);
         visit.setParameters(diagnosis, prescription, comments);
+        try {
+            visit.setVisitDate(visitDate);
+        } catch (DateTimeParseException exception) {
+            throw new CommandException(EditVisitCommand.MESSAGE_USAGE);
+        }
+
         Patient patientEdited;
 
         if (visitIndex != NEW_VISIT) {
+            VisitHistory newVisitHistory = VisitHistory.deepCopyVisitHistory(patientToEdit.getVisitHistory());
+            // Edit existing Visit
             patientEdited = new Patient(patientToEdit.getName(), patientToEdit.getPhone(), patientToEdit.getIcNumber(),
-                    patientToEdit.getVisitHistory().editVisit(visitIndex, visit), patientToEdit.getAddress(),
+                    newVisitHistory.editVisit(visitIndex, visit), patientToEdit.getAddress(),
                     patientToEdit.getEmail(), patientToEdit.getProfilePicture(), patientToEdit.getSex(),
                     patientToEdit.getBloodType(), patientToEdit.getAllergies(), patientToEdit.getColorTag());
         } else {
+            // Add new Visit
+            VisitHistory newVisitHistory = VisitHistory.deepCopyVisitHistory(patientToEdit.getVisitHistory());
             patientEdited = new Patient(patientToEdit.getName(), patientToEdit.getPhone(), patientToEdit.getIcNumber(),
-                    patientToEdit.getVisitHistory().addVisit(visit), patientToEdit.getAddress(),
+                    newVisitHistory.addVisit(visit), patientToEdit.getAddress(),
                     patientToEdit.getEmail(), patientToEdit.getProfilePicture(), patientToEdit.getSex(),
                     patientToEdit.getBloodType(), patientToEdit.getAllergies(), patientToEdit.getColorTag());
         }
@@ -72,7 +88,8 @@ public class SaveVisitCommand extends Command {
 
         model.setPatient(patientToEdit, patientEdited);
         model.updateFilteredPatientList(PREDICATE_SHOW_ALL_PATIENTS);
-
+        model.commitCliniCal(String.format(Messages.MESSAGE_UNDONE_REDONE_INPUT, "Add/Edit visit for the patient:\n",
+            patientEdited));
         return new CommandResult(String.format(MESSAGE_SAVE_VISIT_SUCCESS, patientToEdit));
     }
 

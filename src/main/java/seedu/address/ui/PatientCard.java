@@ -2,12 +2,13 @@ package seedu.address.ui;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,7 +19,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.logic.Logic;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.patient.Patient;
 import seedu.address.model.patient.ProfilePicture;
@@ -39,7 +39,8 @@ public class PatientCard extends UiPart<Region> {
      */
 
     public final Patient patient;
-    private final Logic logic;
+    private final int index;
+    private final Consumer<String> executor;
 
     @FXML
     private HBox cardPane;
@@ -69,10 +70,11 @@ public class PatientCard extends UiPart<Region> {
     /**
      * Creates a {@code PatientCode} with the given {@code Patient} and index to display.
      */
-    public PatientCard(Patient patient, int displayedIndex, Logic logic) {
+    public PatientCard(Patient patient, int displayedIndex, Consumer<String> executor) {
         super(FXML);
         this.patient = patient;
-        this.logic = logic;
+        this.index = displayedIndex;
+        this.executor = executor;
 
         ProfilePicture thisProfilePic = patient.getProfilePicture();
         File profilePic = new File(thisProfilePic.toString());
@@ -81,7 +83,7 @@ public class PatientCard extends UiPart<Region> {
             assert profilePic != null : "Profile picture cannot be null";
             FileInputStream fileInputStream = new FileInputStream(profilePic);
             Image finalProfilePic = new Image(fileInputStream);
-            profilePicture.setImage(finalProfilePic);
+            setupImageView(finalProfilePic, profilePicture);
         } catch (IOException error) {
             error.getMessage();
         }
@@ -89,7 +91,7 @@ public class PatientCard extends UiPart<Region> {
         id.setText(displayedIndex + ". ");
         name.setText(patient.getName().fullName);
         phone.setText("Phone: " + patient.getPhone().value);
-        icNumber.setText("IC Number: " + patient.getIcNumber().value);
+        icNumber.setText("NRIC: " + patient.getIcNumber().value);
         address.setText("Address: " + patient.getAddress().value);
         email.setText("Email: " + patient.getEmail().value);
         sex.setText("Sex: " + patient.getSex().value);
@@ -99,6 +101,19 @@ public class PatientCard extends UiPart<Region> {
                 .sorted(Comparator.comparing(tag -> tag.allergyName))
                 .forEach(tag -> allergies.getChildren().add(new Label(tag.allergyName)));
         cardPane.setStyle("-fx-background-color: " + patient.getColorTag().cssColor + ";");
+    }
+
+    private static void setupImageView(Image img, ImageView imgView) {
+        // Adopted from https://stackoverflow.com/a/43669816
+        double width = img.getWidth();
+        double height = img.getHeight();
+        double newMeasure = Math.min(width, height);
+        double x = (width - newMeasure) / 2;
+        double y = (height - newMeasure) / 2;
+
+        Rectangle2D rect = new Rectangle2D(x, y, newMeasure, newMeasure);
+        imgView.setViewport(rect);
+        imgView.setImage(img);
     }
 
     @FXML
@@ -112,15 +127,12 @@ public class PatientCard extends UiPart<Region> {
     }
 
     @FXML
-    private void dropPicture(DragEvent event) throws FileNotFoundException, CommandException, IllegalValueException {
+    private void dropPicture(DragEvent event) throws IOException, CommandException, IllegalValueException {
         Dragboard dragboard = event.getDragboard();
         List<File> fileToTransfer = dragboard.getFiles();
         File imageFile = fileToTransfer.get(0);
         assert imageFile != null : "Profile picture cannot be null";
-        FileInputStream fileInputStream = new FileInputStream(imageFile);
-        Image image = new Image(fileInputStream);
-        profilePicture.setImage(image);
-        logic.runImageTransfer(patient, imageFile);
+        executor.accept("addpicture " + index + " f/" + imageFile.getCanonicalPath());
     }
 
     @Override

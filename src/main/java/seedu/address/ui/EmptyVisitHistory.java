@@ -8,15 +8,19 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import seedu.address.commons.core.LogsCenter;
 
+//@@author SQwQ-reused
+//Reused from
+//https://github.com/AY1920S1-CS2103T-F12-2/main/blob/master/src/main/java/unrealunity/visit/ui/EmptyVisitList.java
+//with modifications
 /**
  * Controller for a help page
  */
-public class EmptyVisitList extends UiPart<Stage> {
+public class EmptyVisitHistory extends UiPart<Stage> {
 
     public static final String EMPTY_MESSAGE = "Patient has no past visitation records.";
 
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
-    private static final String FXML = "EmptyVisitListWindow.fxml";
+    private static final String FXML = "EmptyVisitHistoryWindow.fxml";
 
     @FXML
     private Button button;
@@ -29,7 +33,7 @@ public class EmptyVisitList extends UiPart<Stage> {
      *
      * @param root Stage to use as the root of the HelpWindow.
      */
-    public EmptyVisitList(Stage root) {
+    public EmptyVisitHistory(Stage root) {
         super(FXML, root);
         text.setText(EMPTY_MESSAGE);
     }
@@ -37,7 +41,7 @@ public class EmptyVisitList extends UiPart<Stage> {
     /**
      * Instantiates new HelpWindow.
      */
-    public EmptyVisitList() {
+    public EmptyVisitHistory() {
         this(new Stage());
     }
 
@@ -72,7 +76,7 @@ public class EmptyVisitList extends UiPart<Stage> {
     }
 
     /**
-     * Copies user guide's link to clipboard.
+     * Copies CliniCal's user guide link to clipboard.
      */
     @FXML
     private void copyUrl() {

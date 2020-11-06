@@ -1,5 +1,9 @@
 package seedu.address.testutil;
 
+import static seedu.address.model.appointment.AppointmentDateTime.DATE_TIME_FORMATTER;
+
+import java.time.LocalDateTime;
+
 import seedu.address.model.appointment.Appointment;
 import seedu.address.model.appointment.AppointmentDateTime;
 import seedu.address.model.patient.IcNumber;
@@ -12,8 +16,8 @@ public class AppointmentBuilder {
 
     public static final String DEFAULT_NAME = "Danny Williams";
     public static final String DEFAULT_IC = "S1234567A";
-    public static final String DEFAULT_START_TIME = "2020-02-02 14:20";
-    public static final String DEFAULT_END_TIME = "2020-02-02 14:35";
+    public static final String DEFAULT_START_TIME = LocalDateTime.now().plusMinutes(10).format(DATE_TIME_FORMATTER);
+    public static final String DEFAULT_END_TIME = LocalDateTime.now().plusMinutes(40).format(DATE_TIME_FORMATTER);
 
     private Name patientName;
     private IcNumber patientIC;

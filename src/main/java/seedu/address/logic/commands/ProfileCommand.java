@@ -15,7 +15,7 @@ import seedu.address.model.visit.VisitHistory;
 
 
 /**
- * Changes the visitList of an existing person in the address book.
+ * Changes the visit history of an existing person in the address book.
  */
 public class ProfileCommand extends Command {
     public static final String COMMAND_WORD = "profile";
@@ -40,6 +40,7 @@ public class ProfileCommand extends Command {
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
+        assert model != null : "Model cannot be null.";
 
         List<Patient> lastShownList = model.getFilteredPatientList();
         int sizeOfList = lastShownList.size();
@@ -54,7 +55,7 @@ public class ProfileCommand extends Command {
         ObservableList<Visit> copyOfObservableHistory = visitHistory.getObservableVisits();
 
         return new CommandResult(String.format(MESSAGE_VIEW_PROFILE_SUCCESS, patientToDisplay), copyOfObservableHistory,
-                patientToDisplay);
+                                 patientToDisplay);
     }
 
 

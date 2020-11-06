@@ -8,6 +8,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import seedu.address.model.visit.Visit;
 
+//@@author Q-gabe-reused
+//Reused from
+//https://github.com/AY1920S1-CS2103T-F12-2/main/blob/master/src/main/java/unrealunity/visit/ui/VisitRecordWindow.java
+//with modifications
 /**
  * A UI class to show parameters of a {@code Visit} object on the patient's {@code ProfileWindow}.
  */

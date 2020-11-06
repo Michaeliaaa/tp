@@ -22,8 +22,9 @@ public class DeleteCommand extends Command {
             + "Parameters: INDEX (must be a positive number)\n\n"
             + "Example: " + COMMAND_WORD + " 1";
 
-    public static final String MESSAGE_DELETE_PATIENT_SUCCESS = "Deleted Patient: %1$s";
-
+    public static final String MESSAGE_DELETE_PATIENT_SUCCESS = "NOTE : Please make sure to delete any appointments "
+            + "related to the deleted patient, using the 'deleteappt' command.\n\n"
+            + "Deleted patient:\n%1$s";
     private final Index targetIndex;
 
     public DeleteCommand(Index targetIndex) {
@@ -41,7 +42,8 @@ public class DeleteCommand extends Command {
 
         Patient patientToDelete = lastShownList.get(targetIndex.getZeroBased());
         model.deletePatient(patientToDelete);
-        model.commitCliniCal(String.format(Messages.MESSAGE_UNDONE_REDONE_INPUT, COMMAND_WORD, patientToDelete));
+        model.commitCliniCal(String.format(Messages.MESSAGE_UNDONE_REDONE_INPUT,
+            COMMAND_WORD + " ", targetIndex.getOneBased()));
         return new CommandResult(String.format(MESSAGE_DELETE_PATIENT_SUCCESS, patientToDelete));
     }
 

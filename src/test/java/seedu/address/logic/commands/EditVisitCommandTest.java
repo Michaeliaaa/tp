@@ -19,6 +19,8 @@ import seedu.address.testutil.TypicalPatients;
 
 public class EditVisitCommandTest {
 
+    private static final String DATE_1 = "7/17/2020";
+    private static final String DATE_2 = "8/18/2020";
     private static final int EMPTY_INDEX = -1;
     private static final int VALID_INDEX = 1;
     private static final int INVALID_INDEX = 0;
@@ -28,14 +30,14 @@ public class EditVisitCommandTest {
 
     @Test
     public void constructor_nullValue_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> new EditVisitCommand(null, 1));
+        assertThrows(NullPointerException.class, () -> new EditVisitCommand(null, 1, null));
     }
 
     @Test
-    public void execute_invalidPersonIndexUnfilteredList_failure() {
+    public void execute_unfilteredListInvalidPatientIndex_failure() {
         int outOfBoundInt = model.getFilteredPatientList().size() + 1;
         Index outOfBoundIndex = Index.fromOneBased(outOfBoundInt);
-        EditVisitCommand editVisitCommand = new EditVisitCommand(outOfBoundIndex, EMPTY_INDEX);
+        EditVisitCommand editVisitCommand = new EditVisitCommand(outOfBoundIndex, EMPTY_INDEX, DATE_1);
 
         CommandTestUtil.assertCommandFailure(editVisitCommand, model, Messages.MESSAGE_INVALID_PATIENT_DISPLAYED_INDEX);
     }
@@ -45,7 +47,7 @@ public class EditVisitCommandTest {
      * lesser than size of patient list in CliniCal
      */
     @Test
-    public void execute_invalidPersonIndexFilteredList_failure() {
+    public void execute_filteredListInvalidPatientIndex_failure() {
         Index indexOfPatient = TypicalIndexes.INDEX_FIRST_PATIENT;
         Index outOfBoundIndex = TypicalIndexes.INDEX_SECOND_PATIENT;
         CommandTestUtil.showPatientAtIndex(model, indexOfPatient);
@@ -57,7 +59,7 @@ public class EditVisitCommandTest {
         // Assert that outOfBoundIndex is still in bounds of size of patient list in CliniCal
         assertTrue(outOfBoundIndex.getZeroBased() < sizeOfPatientList);
 
-        EditVisitCommand editVisitCommand = new EditVisitCommand(outOfBoundIndex, EMPTY_INDEX);
+        EditVisitCommand editVisitCommand = new EditVisitCommand(outOfBoundIndex, EMPTY_INDEX, DATE_1);
         CommandTestUtil.assertCommandFailure(editVisitCommand, model, Messages.MESSAGE_INVALID_PATIENT_DISPLAYED_INDEX);
     }
 
@@ -66,12 +68,12 @@ public class EditVisitCommandTest {
         Index indexOfPatient = TypicalIndexes.INDEX_FIRST_PATIENT;
         Index indexOfSecondPatient = TypicalIndexes.INDEX_SECOND_PATIENT;
 
-        EditVisitCommand editVisitCommand = new EditVisitCommand(indexOfPatient, INVALID_INDEX);
+        EditVisitCommand editVisitCommand = new EditVisitCommand(indexOfPatient, INVALID_INDEX, null);
 
         // To check index out of bounds
         EditVisitCommand editCommand = new EditVisitCommand(indexOfSecondPatient,
                 model.getFilteredPatientList().get(indexOfSecondPatient.getZeroBased()).getVisitHistory()
-                                                      .getVisits().size() + 2);
+                                                      .getVisits().size() + 2, DATE_1);
 
         CommandTestUtil.assertCommandFailure(editCommand, model, Messages.MESSAGE_INVALID_VISIT_HISTORY_INDEX);
         CommandTestUtil.assertCommandFailure(editVisitCommand, model, Messages.MESSAGE_INVALID_VISIT_HISTORY_INDEX);
@@ -82,21 +84,25 @@ public class EditVisitCommandTest {
         Index indexOfPatient = TypicalIndexes.INDEX_FIRST_PATIENT;
         Index indexOfSecondPatient = TypicalIndexes.INDEX_SECOND_PATIENT;
 
-        final EditVisitCommand command = new EditVisitCommand(indexOfPatient, EMPTY_INDEX);
+        final EditVisitCommand command = new EditVisitCommand(indexOfPatient, EMPTY_INDEX, DATE_1);
 
         // Null value. Returns false
         assertFalse(command.equals(null));
 
         // Same values. Returns true
-        EditVisitCommand commandWithSameValues = new EditVisitCommand(indexOfPatient, EMPTY_INDEX);
+        EditVisitCommand commandWithSameValues = new EditVisitCommand(indexOfPatient, EMPTY_INDEX, DATE_1);
         assertTrue(command.equals(commandWithSameValues));
 
         // Different visit index. Returns false
-        EditVisitCommand commandWithDifferentIndex = new EditVisitCommand(indexOfPatient, VALID_INDEX);
+        EditVisitCommand commandWithDifferentIndex = new EditVisitCommand(indexOfPatient, VALID_INDEX, DATE_1);
         assertFalse(command.equals(commandWithDifferentIndex));
 
         // Different patient index. Returns false
-        assertFalse(command.equals(new EditVisitCommand(indexOfSecondPatient, EMPTY_INDEX)));
+        assertFalse(command.equals(new EditVisitCommand(indexOfSecondPatient, EMPTY_INDEX, DATE_1)));
+
+        // Different date
+        EditVisitCommand commandWithDifferentDate = new EditVisitCommand(indexOfPatient, EMPTY_INDEX, DATE_2);
+        assertFalse(command.equals(commandWithDifferentDate));
 
         // Same object. Returns true
         assertTrue(command.equals(command));

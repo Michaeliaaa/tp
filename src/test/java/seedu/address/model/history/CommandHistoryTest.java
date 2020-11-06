@@ -39,7 +39,7 @@ public class CommandHistoryTest {
     void getCommandHistoryTest1() {
         CommandHistory.clearHistory();
         CommandHistory.addUsedCommand("history");
-        assertEquals("Here are your command history:", CommandHistory.getCommandHistory());
+        assertEquals("Here is your command history:", CommandHistory.getCommandHistory());
     }
 
     @Test
@@ -49,7 +49,7 @@ public class CommandHistoryTest {
         CommandHistory.addUsedCommand("clear");
         CommandHistory.addUsedCommand("delete");
         CommandHistory.addUsedCommand("history");
-        assertEquals("Here are your command history:\n" + " -\tdelete\n"
+        assertEquals("Here is your command history:\n" + " -\tdelete\n"
                 + " -\tclear\n" + " -\tlist", CommandHistory.getCommandHistory());
     }
 

@@ -12,7 +12,7 @@ public class UndoCommand extends Command {
 
     public static final String COMMAND_WORD = "undo";
 
-    public static final String MESSAGE_SUCCESS = "Undo-ed the command:\n %1$s";
+    public static final String MESSAGE_SUCCESS = "Undo-ed the command:\n\n%1$s";
 
     public static final String MESSAGE_FAILURE = "No more commands to undo";
 

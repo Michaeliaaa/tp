@@ -1,0 +1,17 @@
+@startuml
+!include style.puml
+start
+:User executes ""ProfileCommand"";
+
+if () then ([invalid Patient Index]);
+        :Display exception handling message;
+                stop
+    else([else])
+        :""Patient is specified by valid Index"";
+endif
+:""ProfileWindow"" loaded with relevant Patient details;
+:""ProfileWindow"" is displayed;
+
+stop
+
+@enduml

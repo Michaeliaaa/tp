@@ -29,24 +29,24 @@
                     <Insets top="5.0" />
                 </padding>
             </Label>
-            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="cell_small_label_bold" text="Medication:" underline="true" wrapText="true">
+            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="cell_small_label_bold" text="Prescription:" underline="true" wrapText="true">
                 <padding>
                     <Insets top="10.0" />
                 </padding>
             </Label>
-            <Label fx:id="profilePrescription" maxWidth="500.0" styleClass="text-field-visit" text="\$medication" wrapText="true" VBox.vgrow="ALWAYS">
+            <Label fx:id="profilePrescription" maxWidth="500.0" styleClass="text-field-visit" text="\$prescription" wrapText="true" VBox.vgrow="ALWAYS">
                 <VBox.margin>
                     <Insets />
                 </VBox.margin>
                 <padding>
                     <Insets top="2.0" />
                 </padding></Label>
-            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="cell_small_label_bold" text="Remarks:" underline="true" wrapText="true">
+            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="cell_small_label_bold" text="Comments:" underline="true" wrapText="true">
                 <padding>
                     <Insets top="10.0" />
                 </padding>
             </Label>
-            <Label fx:id="profileComment" maxWidth="500.0" styleClass="text-field-visit" text="\$remarks" wrapText="true" VBox.vgrow="ALWAYS">
+            <Label fx:id="profileComment" maxWidth="500.0" styleClass="text-field-visit" text="\$comments" wrapText="true" VBox.vgrow="ALWAYS">
                 <padding>
                     <Insets top="2.0" />
                 </padding>

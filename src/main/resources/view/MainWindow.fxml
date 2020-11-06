@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.stage.Stage?>
 
-<fx:root minHeight="600" minWidth="1000" onCloseRequest="#handleExit" title="CliniCal" type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root minHeight="600" minWidth="1200" onCloseRequest="#handleExit" title="CliniCal" type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <icons>
     <Image url="@/images/stethoscope.png" />
   </icons>
@@ -46,7 +46,7 @@
                         </padding>
                         <StackPane fx:id="appointmentListPanelPlaceholder" VBox.vgrow="ALWAYS" HBox.hgrow="NEVER" />
                       </VBox>
-                      <StackPane fx:id="calendarDisplayPlaceholder" prefHeight="150.0" prefWidth="700" minWidth="700" />
+                      <StackPane fx:id="calendarDisplayPlaceholder" prefHeight="150.0" prefWidth="900" minWidth="900" />
                     </HBox>
                   </content>
                 </Tab>
@@ -63,7 +63,7 @@
               </tabs>
             </TabPane>
 
-        <StackPane fx:id="resultDisplayPlaceholder" maxHeight="460.0" minHeight="150.0" prefHeight="190.0" prefWidth="340.0" styleClass="pane-with-border" VBox.vgrow="NEVER">
+        <StackPane fx:id="resultDisplayPlaceholder" maxHeight="460.0" minHeight="120.0" prefHeight="190.0" prefWidth="340.0" styleClass="pane-with-border" VBox.vgrow="NEVER">
           <padding>
             <Insets bottom="5" left="10" right="10" top="5" />
           </padding>

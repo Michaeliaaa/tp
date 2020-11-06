@@ -357,3 +357,12 @@
     -fx-background-radius: 2;
     -fx-font-size: 11;
 }
+
+.text-area .scroll-bar:vertical {
+    -fx-pref-width: 1;
+    -fx-opacity: 0;
+}
+.text-area .scroll-bar:horizontal {
+    -fx-pref-height: 1;
+    -fx-opacity: 0;
+}

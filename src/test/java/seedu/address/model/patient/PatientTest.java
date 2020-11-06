@@ -39,9 +39,9 @@ public class PatientTest {
                 .withIcNumber(VALID_ICNUMBER_BOB).build();
         assertFalse(ALICE.isSamePatient(editedAlice));
 
-        // different name -> returns false
+        // different name -> returns true
         editedAlice = new PatientBuilder(ALICE).withName(VALID_NAME_BOB).build();
-        assertFalse(ALICE.isSamePatient(editedAlice));
+        assertTrue(ALICE.isSamePatient(editedAlice));
 
         // same name, same ic number, different attributes -> returns true
         editedAlice = new PatientBuilder(ALICE).withAddress(VALID_ADDRESS_BOB).withEmail(VALID_EMAIL_BOB)

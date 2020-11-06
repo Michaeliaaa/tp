@@ -7,18 +7,20 @@ import org.junit.jupiter.api.Test;
 
 public class ProfilePictureTest {
     @Test
+    // Null file path
     public void constructor_null_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> new ProfilePicture(null));
     }
 
     @Test
     public void isValidFilePath() {
-        // null file path
+        // Null file path
         assertThrows(NullPointerException.class, () -> ProfilePicture.isValidFilePath(null));
     }
 
     @Test
-    public void toStringTest() {
+    // Valid test for toString
+    public void toString_validInput_success() {
         ProfilePicture profilePicture = new ProfilePicture("data/pictures");
         String filePath = profilePicture.toString();
         assertEquals("data/pictures", filePath);

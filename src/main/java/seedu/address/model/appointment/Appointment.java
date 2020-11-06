@@ -132,11 +132,13 @@ public class Appointment {
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("Patient: ")
-                .append(getPatientName())
-                .append(" Start: ")
-                .append(getStartTime())
-                .append(" End: ")
+        builder.append("Patient Name: ")
+                .append(getPatientName() + "\n")
+                .append("Patient NRIC: ")
+                .append(getPatientIc() + "\n")
+                .append("Starting Time: ")
+                .append(getStartTime() + "\n")
+                .append("Ending Time: ")
                 .append(getEndTime());
         return builder.toString();
     }

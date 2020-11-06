@@ -2,6 +2,7 @@ package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.commons.core.Messages.MESSAGE_PICTURE_DOES_NOT_EXIST;
+import static seedu.address.commons.core.Messages.MESSAGE_PICTURE_HAS_WRONG_EXTENSION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_FILE_PATH;
 
 import java.io.File;
@@ -37,7 +38,14 @@ public class AddProfilePictureCommandParser implements Parser<AddProfilePictureC
                                                    AddProfilePictureCommand.MESSAGE_USAGE));
         }
 
-        File profilePicture = new File(argMultiMap.getValue(PREFIX_FILE_PATH).get());
+        String filePath = argMultiMap.getValue(PREFIX_FILE_PATH).get();
+
+        String extension = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
+        if (!extension.equals("jpg") && !extension.equals("png")) {
+            throw new ParseException(MESSAGE_PICTURE_HAS_WRONG_EXTENSION);
+        }
+
+        File profilePicture = new File(filePath);
 
         if (!profilePicture.exists()) {
             throw new ParseException(String.format(MESSAGE_PICTURE_DOES_NOT_EXIST,

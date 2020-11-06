@@ -43,11 +43,12 @@ public class AddCommand extends Command {
             + PREFIX_SEX + "M "
             + PREFIX_BLOODTYPE + "A+ "
             + PREFIX_ALLERGY + "penicillin "
-            + PREFIX_ALLERGY + "sulfa"
+            + PREFIX_ALLERGY + "sulfa "
             + PREFIX_COLORTAG + "green";
 
-    public static final String MESSAGE_SUCCESS = "New patient added: %1$s";
-    public static final String MESSAGE_DUPLICATE_PATIENT = "This patient already exists in the list of patients";
+    public static final String MESSAGE_SUCCESS = "New patient added:\n%1$s";
+    public static final String MESSAGE_DUPLICATE_PATIENT = "This patient already exists in the list of patients.\n"
+            + "Please note that patients with duplicate IC number will not be accepted.";
 
     private final Patient toAdd;
 

@@ -30,12 +30,15 @@ public class AppointmentDateTimeTest {
         assertFalse(AppointmentDateTime.isValidDateTime("")); // empty string
         assertFalse(AppointmentDateTime.isValidDateTime(" ")); // spaces only
         assertFalse(AppointmentDateTime.isValidDateTime("202012152336")); // invalid format
-        assertFalse(AppointmentDateTime.isValidDateTime("2020-Dec-25 23:36")); // invalid month
-        assertFalse(AppointmentDateTime.isValidDateTime("2020-12-55 23:36")); // invalid day
-        assertFalse(AppointmentDateTime.isValidDateTime("2020-12-55 88:36")); // invalid hour
-        assertFalse(AppointmentDateTime.isValidDateTime("2020-12-25 23:99")); // invalid minute
+        assertFalse(AppointmentDateTime.isValidDateTime("25/Dec/2020 23:36")); // invalid month
+        assertFalse(AppointmentDateTime.isValidDateTime("55/12/2020 23:36")); // invalid day
+        assertFalse(AppointmentDateTime.isValidDateTime("55/12/2020 88:36")); // invalid hour
+        assertFalse(AppointmentDateTime.isValidDateTime("25/12/2020 23:99")); // invalid minute
+
+        assertFalse(AppointmentDateTime.isValidDateTime("31/11/2020 01:00")); // bug found in PE-D
+        assertFalse(AppointmentDateTime.isValidDateTime("29/02/2021 00:00"));
 
         // valid appointment datetime
-        assertTrue(AppointmentDateTime.isValidDateTime("2020-12-25 23:36"));
+        assertTrue(AppointmentDateTime.isValidDateTime("25/12/2025 23:36"));
     }
 }

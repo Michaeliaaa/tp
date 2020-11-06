@@ -1,11 +1,18 @@
 package seedu.address.model.visit;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seedu.address.model.patient.Name;
+
+//@@author SQwQ-reused
+//Reused from
+//https://github.com/AY1920S1-CS2103T-F12-2/main/blob/master/src/main/java/unrealunity/visit/model/person/VisitList.java
+//with modifications
 
 /**
  * Represents a patient's visit history in the CliniCal application.
@@ -35,6 +42,7 @@ public class VisitHistory {
     public VisitHistory addVisit(Visit toAdd) {
         this.visits.add(toAdd);
         Collections.sort(this.visits);
+        Collections.reverse((this.visits));
         return this;
     }
 
@@ -43,6 +51,8 @@ public class VisitHistory {
      */
     public VisitHistory editVisit(int idx, Visit toEdit) {
         this.visits.set(idx - 1, toEdit);
+        Collections.sort(this.visits);
+        Collections.reverse((this.visits));
         return this;
     }
 
@@ -60,6 +70,20 @@ public class VisitHistory {
 
     public ArrayList<Visit> getVisits() {
         return this.visits;
+    }
+
+    /**
+     * Deep-copies an existing visit history to facilitate undo/redo functions.
+     * @return a new VisitHistory with no reference to the existingVisitHistory
+     */
+    public static VisitHistory deepCopyVisitHistory(VisitHistory existingVisitHistory) {
+        ArrayList<Visit> newVisitArrayList = new ArrayList<>();
+        for (Visit v : existingVisitHistory.getVisits()) {
+            Visit newVisit = new Visit(LocalDate.parse(v.getVisitDate().toString()),
+                new Name(v.getPatientName().toString()), v.getDiagnosis(), v.getPrescription(), v.getComment());
+            newVisitArrayList.add(newVisit);
+        }
+        return new VisitHistory(newVisitArrayList);
     }
 
     /**

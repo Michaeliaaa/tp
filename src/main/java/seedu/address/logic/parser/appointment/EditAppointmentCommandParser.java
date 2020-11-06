@@ -56,7 +56,8 @@ public class EditAppointmentCommandParser implements Parser<EditAppointmentComma
                     argMultimap.getValue(PREFIX_APP_STARTTIME).get()));
         }
         if (argMultimap.getValue(PREFIX_APP_DURATION).isPresent()) {
-            editAppointmentDescriptor.setDuration(Integer.parseInt(argMultimap.getValue(PREFIX_APP_DURATION).get()));
+            editAppointmentDescriptor.setDuration(ParserUtil.parseDuration(
+                    argMultimap.getValue(PREFIX_APP_DURATION).get()));
         }
 
         if (!editAppointmentDescriptor.isAnyFieldEdited()) {

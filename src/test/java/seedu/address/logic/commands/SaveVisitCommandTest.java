@@ -33,7 +33,7 @@ public class SaveVisitCommandTest {
     }
 
     @Test
-    public void execute_saveVisitUnfilteredList_success() {
+    public void execute_unfilteredListSaveVisit_success() {
         Patient firstPerson = model.getFilteredPatientList().get(TypicalIndexes.INDEX_FIRST_PATIENT.getZeroBased());
 
         Patient editedPerson = new PatientBuilder(firstPerson)
@@ -41,7 +41,7 @@ public class SaveVisitCommandTest {
 
         SaveVisitCommand saveVisitCommand = new SaveVisitCommand(
                 TypicalIndexes.INDEX_FIRST_PATIENT.getOneBased(), "27/03/2019",
-                visit.getPrescription(), visit.getDiagnosis(), visit.getComment(), -1);
+                visit.getPrescription(), visit.getDiagnosis(), visit.getComment(), NEW_VISIT);
 
         String expectedMessage = String.format(SaveVisitCommand.MESSAGE_SAVE_VISIT_SUCCESS, editedPerson);
 
@@ -53,7 +53,7 @@ public class SaveVisitCommandTest {
     }
 
     @Test
-    public void execute_unfilteredListInvalidPersonIndex_failure() {
+    public void execute_unfilteredListInvalidPatientIndex_failure() {
         ObservableList<Patient> filteredPatientList = model.getFilteredPatientList();
         int sizeOfList = filteredPatientList.size();
         Index outOfBoundIndex = Index.fromOneBased(sizeOfList + 1);
@@ -72,7 +72,7 @@ public class SaveVisitCommandTest {
      * lesser than size of patient list in CliniCal
      */
     @Test
-    public void execute_filteredListInvalidPersonIndex_failure() {
+    public void execute_filteredListInvalidPatientIndex_failure() {
         Index firstPatientIndex = TypicalIndexes.INDEX_FIRST_PATIENT;
         CommandTestUtil.showPatientAtIndex(model, firstPatientIndex);
         Index outOfBoundIndex = TypicalIndexes.INDEX_SECOND_PATIENT;
@@ -99,7 +99,7 @@ public class SaveVisitCommandTest {
         SaveVisitCommand saveVisitCommand = new SaveVisitCommand(1, "08/10/2020", "cancer",
                                       "pain pills", "monitor closely", NEW_VISIT);
 
-        // null -> returns false
+        // Null value. Returns false
         assertFalse(saveVisitCommand.equals(null));
 
         // Same object. Returns true

@@ -31,7 +31,7 @@ public class AddVisitCommandTest {
     }
 
     @Test
-    public void execute_invalidPersonIndexUnfilteredList_failure() {
+    public void execute_unfilteredListInvalidPatientIndex_failure() {
         int outOfBoundInt = model.getFilteredPatientList().size() + 1;
         Index outOfBoundIndex = Index.fromOneBased(outOfBoundInt);
         AddVisitCommand addVisitCommand = new AddVisitCommand(DATE_1, outOfBoundIndex);
@@ -44,7 +44,7 @@ public class AddVisitCommandTest {
      * lesser than size of patient list in CliniCal
      */
     @Test
-    public void execute_invalidPersonIndexFilteredList_failure() {
+    public void execute_filteredListInvalidPatientIndex_failure() {
         Index indexOfFirstPatient = TypicalIndexes.INDEX_FIRST_PATIENT;
         Index indexOfSecondPatient = TypicalIndexes.INDEX_SECOND_PATIENT;
         CommandTestUtil.showPatientAtIndex(model, indexOfFirstPatient);
@@ -68,7 +68,7 @@ public class AddVisitCommandTest {
 
         AddVisitCommand testCommand = new AddVisitCommand(DATE_1, indexOfFirstPatient);
 
-        // Null input. Returns false
+        // Null value. Returns false
         assertFalse(testCommand.equals(null));
 
         // Same object. Returns true
